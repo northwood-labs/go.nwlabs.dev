@@ -1,0 +1,67 @@
+---
+# This workflow uses actions that are not certified by GitHub. They are provided
+# by a third-party and are governed by separate terms of service, privacy
+# policy, and support documentation.
+
+name: "Generate Go module endpoints"
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    # https://crontab.guru/#0_5_*_*_*
+    - cron: "0 5 * * *"
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  DOCKER_BUILDKIT: 1
+
+permissions: read-all
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    name: Generate the latest definitions
+    permissions:
+      id-token: write
+      pages: write
+    timeout-minutes: 2
+    strategy:
+      fail-fast: false
+
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@f808768d1510423e83855289c910610ca9b43176 # v2.17.0
+        with:
+          egress-policy: audit
+
+      - name: Checkout the code
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Generate
+        id: generate
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          ./run.sh
+
+      - name: Git config
+        run: |
+          git config --global user.name "Northwood Labs Bot"
+          git config --global user.email "bot@northwood-labs.com"
+          git pull --rebase --autostash
+
+      - name: Git commit
+        run: |
+          if [[ "$(git status -sb | wc -l)" == "1" ]]; then
+            echo "No changes to commit."
+          else
+            git add .
+            git commit -m "Automated commit: $(date +"%Y-%m-%dT%T%z")"
+            git push origin main
+          fi
