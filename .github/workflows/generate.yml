@@ -28,6 +28,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Generate the latest definitions
     permissions:
+      contents: write # for Git to git push
       id-token: write
       pages: write
     timeout-minutes: 2
