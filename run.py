@@ -31,7 +31,7 @@ REDIRECT_TEMPLATE_GOMOD = Template(
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="go-import" content="go.nwlabs.dev/{{ repo }} git https://github.com/northwood-labs/{{ repo }} {{ path }}">
+    <meta name="go-import" content="go.nwlabs.dev/{{ repo }}/{{ path }} git https://github.com/northwood-labs/{{ repo }} {{ path }}">
     <meta http-equiv="refresh" content="0;URL='https://github.com/northwood-labs/{{ repo }}/tree/main/{{ path }}'">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ repo }}/{{ path }}</title>
