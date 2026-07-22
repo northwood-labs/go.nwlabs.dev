@@ -21,7 +21,9 @@ jobs:
         with:
           egress-policy: block
           allowed-endpoints: >
+            api.deps.dev:443
             api.github.com:443
+            api.securityscorecards.dev:443
             files.pythonhosted.org:443
             github.com:443
             raw.githubusercontent.com:443
